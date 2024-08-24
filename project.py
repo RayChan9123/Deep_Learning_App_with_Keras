@@ -8,4 +8,5 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import SimpleRNN, Dense, Dropout
 import matplotlib.pyplot as plt
 
-print('hellow world');
+# Load the data
+data = pd.read_csv("./data/Tesla_Nasdaq_Prediction.csv")
