@@ -8,5 +8,31 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import SimpleRNN, Dense, Dropout
 import matplotlib.pyplot as plt
 
+
 # Load the data
-data = pd.read_csv("./data/Tesla_Nasdaq_Prediction.csv")
+data = pd.read_csv('./data/Tesla_Nasdaq_Prediction.csv')
+print(data)
+
+# Prepare the dataset
+#iloc[row, col]
+#Extract all rows and columns from the 3rd onward as a NumPy array and assign to 'features'
+features = data.iloc[:, 2:].values
+#print(features)
+
+target = data['Close/Last'].values 
+
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, random_state=42)
+# print(X_train)
+# print(len(X_train))
+
+# Scale the features and target
+scaler = MinMaxScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+y_train_scaled = scaler.fit_transform(y_train.reshape(-1, 1))
+y_test_scaled = scaler.transform(y_test.reshape(-1, 1))
+
+# Reshape input to be [samples, time steps, features] which is required for RNN
+X_train_reshaped = X_train_scaled.reshape((X_train_scaled.shape[0], 1, X_train_scaled.shape[1]))
+X_test_reshaped = X_test_scaled.reshape((X_test_scaled.shape[0], 1, X_test_scaled.shape[1]))

@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"name": "Machine Learning Workplace",
+			"path": ".."
+		},
+		{
+			"name": "input",
+			"path": "../../../input"
+		}
+	],
+	"settings": {
+		"cSpell.words": [
+			"iloc"
+		]
+	}
+}
