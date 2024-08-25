@@ -36,3 +36,17 @@ y_test_scaled = scaler.transform(y_test.reshape(-1, 1))
 # Reshape input to be [samples, time steps, features] which is required for RNN
 X_train_reshaped = X_train_scaled.reshape((X_train_scaled.shape[0], 1, X_train_scaled.shape[1]))
 X_test_reshaped = X_test_scaled.reshape((X_test_scaled.shape[0], 1, X_test_scaled.shape[1]))
+
+#Recurrent Neural Network (RNN)
+# Build the RNN model
+model = Sequential([
+    SimpleRNN(256, input_shape=(X_train_reshaped.shape[1], X_train_reshaped.shape[2]), return_sequences=True),
+    Dropout(0.25),
+    SimpleRNN(128, return_sequences=True),
+    Dropout(0.25),
+    SimpleRNN(64),
+    Dense(1)
+])
+
+# Compile the model
+model.compile(optimizer='adam', loss='mse')
