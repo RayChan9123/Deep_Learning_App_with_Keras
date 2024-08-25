@@ -14,9 +14,13 @@ This project focuses on predicting Tesla's stock price using a Recurrent Neural 
 - **Data Reshaping for RNN**: Learned to reshape input data into the required 3D format `[samples, time steps, features]` for RNN models.
 
 ### 3. Recurrent Neural Networks (RNN)
-- **Model Architecture**: Gained experience in building RNN models using the `Sequential` API in Keras.
-- **Layers**: Learned how to use `SimpleRNN`, `Dense`, and `Dropout` layers to create robust models.
-- **Training and Evaluation**: Understood the process of compiling, training, and evaluating the model's performance.
+- **Model Architecture**: Built an RNN model with three `SimpleRNN` layers to capture temporal dependencies.
+  - First `SimpleRNN` layer with 256 units and `return_sequences=True`.
+  - Second `SimpleRNN` layer with 128 units and `return_sequences=True`.
+  - Third `SimpleRNN` layer with 64 units for final processing.
+- **Dropout for Regularization**: Added `Dropout` layers with a rate of 0.25 after the first and second `SimpleRNN` layers to prevent overfitting.
+- **Output Layer**: A final `Dense` layer with 1 unit for the prediction output.
+- **Model Compilation**: Compiled the model using the Adam optimizer and Mean Squared Error (MSE) loss function.
 
 ### 4. Performance Metrics
 - **Error Metrics**: Explored metrics such as Mean Absolute Error (MAE), Mean Squared Error (MSE), and R-squared (R²) for evaluating regression models.
