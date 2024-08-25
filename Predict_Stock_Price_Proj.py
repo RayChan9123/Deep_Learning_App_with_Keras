@@ -7,7 +7,11 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import SimpleRNN, Dense, Dropout
 import matplotlib.pyplot as plt
+from tensorflow.keras.callbacks import TensorBoard
 
+
+# Add run name 
+RUN_NAME = "run_256"
 
 # Load the data
 data = pd.read_csv('./data/Tesla_Nasdaq_Prediction.csv')
@@ -40,7 +44,7 @@ X_test_reshaped = X_test_scaled.reshape((X_test_scaled.shape[0], 1, X_test_scale
 #Recurrent Neural Network (RNN)
 # Build the RNN model
 model = Sequential([
-    SimpleRNN(256, input_shape=(X_train_reshaped.shape[1], X_train_reshaped.shape[2]), return_sequences=True),
+    SimpleRNN(256, input_shape=(X_train_reshaped.shape[1], X_train_reshaped.shape[2]), return_sequences=True, name='rnn_layer_1'),
     Dropout(0.25),
     SimpleRNN(128, return_sequences=True),
     Dropout(0.25),
@@ -51,9 +55,18 @@ model = Sequential([
 # Compile the model
 model.compile(optimizer='adam', loss='mse')
 
+
+# Create a TensorBoard logger
+logger = TensorBoard(
+    log_dir="output/logs{}".format(RUN_NAME),
+    histogram_freq=5,
+    write_graph=True,
+    write_images=True
+)
+
 # Train the model
 history = model.fit(
-    X_train_reshaped, y_train_scaled, epochs=50, batch_size=32, validation_split=0.1, verbose=1
+     X_train_reshaped, y_train_scaled, epochs=50, batch_size=32, validation_split=0.1, verbose=1, callbacks=[logger]
 )
 
 # Predict and inverse transform the predictions
@@ -93,10 +106,14 @@ plt.show()
 plt.savefig('output/fig/Training_validation_loss.png')
 plt.clf()  # Clear the current figure
 
-# Save the model for future use
-model.save("output/model/trained_model.h5")
-print("Model saved")
+print(model.summary())
+
+# # Save the model for future use
+# model.save("output/model/trained_model.h5")
+# print("Model saved")
 
 # To load the model:
 # from keras.models import load_model
 # model = load_model("output/model/trained_model.h5")
+
+
