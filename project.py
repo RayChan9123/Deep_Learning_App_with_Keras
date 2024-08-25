@@ -50,3 +50,53 @@ model = Sequential([
 
 # Compile the model
 model.compile(optimizer='adam', loss='mse')
+
+# Train the model
+history = model.fit(
+    X_train_reshaped, y_train_scaled, epochs=50, batch_size=32, validation_split=0.1, verbose=1
+)
+
+# Predict and inverse transform the predictions
+preds_scaled = model.predict(X_test_reshaped)
+preds = scaler.inverse_transform(preds_scaled)
+
+# Plot the predictions against the actual values
+plt.figure(figsize=(10, 5))
+plt.plot(y_test, label='Actual Value', color='red', linewidth=2)
+plt.plot(preds, label='Predicted Value', color='blue', linewidth=2)
+plt.title('TESLA/USD Predictions')
+plt.xlabel('Sample Index')
+plt.ylabel('TESLA/USD Value')
+plt.legend()
+plt.show()
+plt.savefig('output/fig/TESLA_USD_Predictions.png')
+plt.clf()  # Clear the current figure
+
+# Calculate metrics
+mae_score = mean_absolute_error(y_test, preds)
+mse_score = mean_squared_error(y_test, preds)
+r2 = r2_score(y_test, preds)
+
+# Output the evaluation results
+print(f"MAE Score: {mae_score}")
+print(f"MSE Score: {mse_score}")
+print(f"R2 Score: {r2 * 100}%")
+
+# Plot training and validation loss
+plt.plot(history.history['loss'], label='Training loss', linewidth=2)
+plt.plot(history.history['val_loss'], label='Validation loss', linewidth=2)
+plt.title('Training and Validation loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.legend()
+plt.show()
+plt.savefig('output/fig/Training_validation_loss.png')
+plt.clf()  # Clear the current figure
+
+# Save the model for future use
+model.save("output/model/trained_model.h5")
+print("Model saved")
+
+# To load the model:
+# from keras.models import load_model
+# model = load_model("output/model/trained_model.h5")
